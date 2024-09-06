@@ -51,13 +51,12 @@ def tobs():
 @app.route('/api/v1.0/<start>/<end>')
 def dateRange(start, end='2017-08-23'):
 
-    results = session.query(M.date, M.tobs).filter((M.date>=start)&(M.date<=end)).all()
-    return { id:loc for id,loc in results }
+    min,max,avg = session.query(func.min(M.tobs),func.max(M.tobs),func.avg(M.tobs)).filter((M.date>=start)&(M.date<=end)).first()
 
-    return f'''
-        This is the start date: {start} <br>
-        This is the end date: {end}
-    '''
+    return { 'Min_Temp':min,'Max_Temp':max,'Avg_Temp':avg,'Start_Date': start, 'End_Date':end}
+
+if '__main__'==__name__:
+    app.run()
 
 
 
